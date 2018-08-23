@@ -191,17 +191,17 @@ AES_ENTRY(aes_ctr_encrypt)
 	bmi		.Lctr1x
 	add		w7, w6, #1
 	mov		v0.16b, v4.16b
-	add		w9, w8, #2
+	add		w8, w6, #2
 	mov		v1.16b, v4.16b
-	add		w10, w8, #3
+	add		w9, w6, #3
 	mov		v2.16b, v4.16b
 	rev		w7, w7
 	mov		v3.16b, v4.16b
-	rev		w9, w9
+	rev		w8, w8
 	mov		v1.s[3], w7
-	rev		w10, w10
-	mov		v2.s[3], w9
-	mov		v3.s[3], w10
+	rev		w9, w9
+	mov		v2.s[3], w8
+	mov		v3.s[3], w9
 	ld1		{v5.16b-v7.16b}, [x1], #48	/* get 3 input blocks */
 	bl		aes_encrypt_block4x
 	eor		v0.16b, v5.16b, v0.16b
