@@ -547,7 +547,7 @@ void kernfs_put(struct kernfs_node *kn)
 	}
 	kfree(kn->iattr);
 	spin_lock(&kernfs_idr_lock);
-	idr_remove(&root->ino_idr, kn->id.ino);
+	idr_remove(&root->ino_idr, kernfs_ino(kn));
 	spin_unlock(&kernfs_idr_lock);
 	kmem_cache_free(kernfs_node_cache, kn);
 
@@ -652,8 +652,7 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
 	idr_preload_end();
 	if (ret < 0)
 		goto err_out2;
-	kn->id.ino = ret;
-	kn->id.generation = gen;
+	kn->id = (u64)gen << 32 | ret;
 
 	/*
 	 * set ino first. This RELEASE is paired with atomic_inc_not_zero in
@@ -668,7 +667,23 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
 	kn->flags = flags;
 
 	return kn;
+	
+	if (!uid_eq(uid, GLOBAL_ROOT_UID) || !gid_eq(gid, GLOBAL_ROOT_GID)) {
+		struct iattr iattr = {
+			.ia_valid = ATTR_UID | ATTR_GID,
+			.ia_uid = uid,
+			.ia_gid = gid,
+		};
 
+		ret = __kernfs_setattr(kn, &iattr);
+		if (ret < 0)
+			goto err_out3;
+	}
+
+	return kn;
+
+ err_out3:
+    idr_remove(&root->ino_idr, kernfs_ino(kn));
  err_out2:
 	kmem_cache_free(kernfs_node_cache, kn);
  err_out1:
@@ -727,7 +742,7 @@ struct kernfs_node *kernfs_find_and_get_node_by_ino(struct kernfs_root *root,
 	 * before 'count'. So if 'count' is uptodate, 'ino' should be uptodate,
 	 * hence we can use 'ino' to filter stale node.
 	 */
-	if (kn->id.ino != ino)
+	if ((u32)kn->id != ino)
 		goto out;
 	rcu_read_unlock();
 
@@ -1662,7 +1677,7 @@ static int kernfs_fop_readdir(struct file *file, struct dir_context *ctx)
 		const char *name = pos->name;
 		unsigned int type = dt_type(pos);
 		int len = strlen(name);
-		ino_t ino = pos->id.ino;
+		ino_t ino = kernfs_ino(pos);
 
 		ctx->pos = pos->hash;
 		file->private_data = pos;
