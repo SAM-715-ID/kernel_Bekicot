@@ -890,6 +890,7 @@ u32 arch_timer_get_rate(void)
 {
 	return arch_timer_rate;
 }
+EXPORT_SYMBOL_GPL(arch_timer_get_rate);
 
 void arch_timer_mem_get_cval(u32 *lo, u32 *hi)
 {

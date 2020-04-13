@@ -1605,6 +1605,7 @@ int drm_mode_convert_umode(struct drm_display_mode *out,
 out:
 	return ret;
 }
+EXPORT_SYMBOL_GPL(drm_mode_convert_umode);
 
 /**
  * drm_mode_is_420_only - if a given videomode can be only supported in YCBCR420
