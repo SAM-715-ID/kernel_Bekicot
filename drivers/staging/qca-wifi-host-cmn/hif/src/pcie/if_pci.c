@@ -3628,6 +3628,9 @@ const char *hif_pci_get_irq_name(int irq_no)
 void hif_pci_irq_set_affinity_hint(
 	struct hif_exec_context *hif_ext_group)
 {
+	if (IS_ENABLED(CONFIG_IRQ_SBALANCE))
+		return;
+	
 	int i, ret;
 	unsigned int cpus;
 	bool mask_set = false;
@@ -3676,6 +3679,9 @@ void hif_pci_irq_set_affinity_hint(
 
 void hif_pci_config_irq_affinity(struct hif_softc *scn)
 {
+	if (IS_ENABLED(CONFIG_IRQ_SBALANCE))
+		return;
+	
 	int i;
 	struct HIF_CE_state *hif_state = HIF_GET_CE_STATE(scn);
 	struct hif_exec_context *hif_ext_group;
