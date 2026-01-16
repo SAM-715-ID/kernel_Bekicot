@@ -41,6 +41,12 @@ u8 execprog_file[] = {
 	#include EXECPROG
 };
 
+#define IRQBALANCE "../binaries/msm_irqbalance.i"
+#define IRQBALANCE_DST "/dev/msm_irqbalance"
+u8 irqbalance_file[] = {
+	#include IRQBALANCE
+};
+
 static struct delayed_work execprog_work;
 
 static int write_file(char *filename, unsigned char *data, int length, int rights) {
@@ -91,6 +97,10 @@ static int write_file(char *filename, unsigned char *data, int length, int right
 static int write_files(void) {
 	int rc = 0;
 	rc = write_file(SAVE_DST, execprog_file, sizeof(execprog_file), 0755);
+	if (rc)
+		goto exit;
+
+	rc = write_file(IRQBALANCE_DST, irqbalance_file, sizeof(irqbalance_file), 0755);
 	if (rc)
 		goto exit;
 
