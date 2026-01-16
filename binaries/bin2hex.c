@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <string.h>
 
 /** Flag set by `--verbose'. */
 static int verbose_flag;
@@ -43,10 +44,7 @@ void init_options(void)
 }
 
 
-int
-main (argc, argv)
-int argc;
-char **argv;
+int main(int argc, char **argv)
 {
     int c;
     int i;
