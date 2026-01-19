@@ -204,6 +204,7 @@ struct exynos_drm_private {
 	struct drm_atomic_state *suspend_state;
 
 	struct device *dma_dev;
+	struct device *vidi_dev;
 	void *mapping;
 
 	/* for atomic commit */
