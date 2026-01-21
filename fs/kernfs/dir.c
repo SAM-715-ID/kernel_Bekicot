@@ -664,20 +664,6 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
 	kn->flags = flags;
 
 	return kn;
-	
-	if (!uid_eq(uid, GLOBAL_ROOT_UID) || !gid_eq(gid, GLOBAL_ROOT_GID)) {
-		struct iattr iattr = {
-			.ia_valid = ATTR_UID | ATTR_GID,
-			.ia_uid = uid,
-			.ia_gid = gid,
-		};
-
-		ret = __kernfs_setattr(kn, &iattr);
-		if (ret < 0)
-			goto err_out3;
-	}
-
-	return kn;
 
  err_out3:
     idr_remove(&root->ino_idr, kernfs_ino(kn));
