@@ -415,8 +415,8 @@ static const struct xattr_handler kernfs_security_xattr_handler = {
 
 static const struct xattr_handler kernfs_user_xattr_handler = {
 	.prefix = XATTR_USER_PREFIX,
-	.get = kernfs_vfs_xattr_get,
-	.set = kernfs_vfs_user_xattr_set,
+	.get = kernfs_xattr_get,
+	.set = kernfs_xattr_set,
 };
 
 const struct xattr_handler *kernfs_xattr_handlers[] = {
