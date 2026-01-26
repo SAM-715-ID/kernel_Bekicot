@@ -1232,6 +1232,7 @@ static int scsiback_remove(struct xenbus_device *dev)
 	scsiback_release_translation_entry(info);
 
 	dev_set_drvdata(&dev->dev, NULL);
+	kfree(info);
 
 	return 0;
 }
