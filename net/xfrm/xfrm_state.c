@@ -1616,6 +1616,7 @@ out:
 
 		err = 0;
 		x->km.state = XFRM_STATE_DEAD;
+		xfrm_dev_state_delete(x);
 		__xfrm_state_put(x);
 	}
 	spin_unlock_bh(&x1->lock);
