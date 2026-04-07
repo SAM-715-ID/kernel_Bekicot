@@ -882,6 +882,9 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
 	 */
 	if (c->x86 == 0x17)
 		clear_cpu_cap(c, X86_FEATURE_XSAVES);
+
+	pr_notice_once("AMD Zen1 FPDSS bug detected, enabling mitigation.\n");
+	msr_set_bit(MSR_AMD64_FP_CFG, MSR_AMD64_FP_CFG_ZEN1_DENORM_FIX_BIT);
 }
 
 static void init_amd(struct cpuinfo_x86 *c)
